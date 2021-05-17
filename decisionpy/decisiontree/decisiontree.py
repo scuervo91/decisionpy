@@ -57,7 +57,7 @@ class Node(BaseModel):
         children_values = []
         children_prob = []
         for c in self.children:
-            c.cum_value = self.value + self.cum_value + c.value
+            c.cum_value = self.cum_value + c.value
             child_value = c.solve()
             children_values.append(child_value)
             children_prob.append(c.probability)
@@ -73,18 +73,20 @@ class Node(BaseModel):
         self.expected_value = result[0]
         return self.expected_value
     
-    def tree(self, decision=None):
+    def tree(self, decision=None, expand_row=False):
         if self.type == 'decision':
-            root_text = f":black_large_square: {self.name}"
+            root_text = f":black_large_square: [bold][u]{self.name}[/u][/bold]"
         elif self.type == 'random':
-            root_text = f":white_circle: {self.name}"
+            root_text = f":white_circle:[bold][u]{self.name}[/u][/bold]"
         else:
-            root_text = f":small_red_triangle_down: {self.name}"
+            root_text = f":small_red_triangle_down: [bold][u]{self.name}[/u][/bold]"
         
-        prob_text = f" [bold cyan]Prob[/bold cyan]: [u]{self.probability}[/u] |" if self.probability < 1 else ""
-        value_text = f" [bold blue]Value[/bold blue]: [u]{self.value}[/u] |"
-        cumvalue_text = f"[bold magenta]Cum Value[/bold magenta]: [u]{self.cum_value}[/u] |"
-        expected_value_text = f"\n [bold green]Exp. Value[/bold green]: [u]{self.expected_value}[/u] |" if self.expected_value is not None else ""
+        new_line = '\n' if expand_row else ''
+        
+        prob_text = f"{new_line} :game_die: [bold cyan]Prob[/bold cyan]: [u]{self.probability}[/u] |" if self.probability < 1 else ""
+        value_text = f"{new_line} :100: [bold blue]Value[/bold blue]: [u]{self.value}[/u] |"
+        cumvalue_text = f"{new_line} :heavy_plus_sign: [bold magenta]Cum Value[/bold magenta]: [u]{self.cum_value}[/u] |"
+        expected_value_text = f"\n     :star: [bold green]Exp. Value[/bold green]: [u]{self.expected_value}[/u] |" if self.expected_value is not None else ""
         
         if decision is not None:
             if decision ==  self.name:
@@ -95,13 +97,17 @@ class Node(BaseModel):
             dec_emoji = ""
         
         tree_text = dec_emoji + root_text + prob_text + value_text + cumvalue_text + expected_value_text
-        node_tree = Tree(tree_text,highlight=True, style='dim')
+        node_tree = Tree(
+            tree_text,
+            highlight=True,
+            guide_style=f"{'underline2' if self.type=='random' else 'bold'}"
+        )
 
         if self.children is None or self.type =='end':
             return node_tree 
         
         for c in self.children:
-            node_tree.add(c.tree(decision=self.path))
+            node_tree.add(c.tree(decision=self.path, expand_row=expand_row))
                    
         return node_tree
 

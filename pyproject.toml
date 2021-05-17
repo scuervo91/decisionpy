@@ -14,6 +14,7 @@ seaborn = "^0.11.1"
 pydantic = "^1.8.2"
 scipy = "1.6.1"
 rich = "^10.2.0"
+PyYAML = "^5.4.1"
 
 [tool.poetry.dev-dependencies]
 notebook = "^6.3.0"

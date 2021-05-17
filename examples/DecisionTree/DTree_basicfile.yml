@@ -1,0 +1,67 @@
+name: Accion
+type: decision 
+value: -35
+cum_value: -35
+children:
+  - name: Paga
+    type: end
+    value: 0
+  - name: Demanda
+    type: random 
+    value: -9 
+    children:
+      - name: Gana 
+        type: end 
+        value: 45
+        probability: 0.425
+      - name: Pierde
+        type: end
+        value: 0
+        probability: 0.575
+  - name: Notifica
+    type: random
+    value: -1
+    children:
+      - name: Negocia
+        type: decision
+        probability: 0.5
+        children:
+          - name: Acuerdo
+            type: end
+            value: 22.5
+          - name: No Acuerdo
+            type: decision
+            children:
+              - name: Demanda
+                type: random
+                value: -9
+                children:
+                  - name: Gana 
+                    type: end 
+                    probability: 0.6 
+                    value: 45
+                  - name: Pierde
+                    type: end 
+                    probability: 0.4
+                    value: 0
+              - name: Paga
+                type: end 
+                value: 0
+      - name: No_negocia
+        type: decision
+        probability: 0.5
+        children:
+          - name: Demanda
+            type: random
+            value: -9
+            children:
+              - name: Gana 
+                type: end 
+                probability: 0.25
+                value: 45
+              - name: Pierde
+                type: end 
+                probability: 0.75
+                value: 0
+
+      
