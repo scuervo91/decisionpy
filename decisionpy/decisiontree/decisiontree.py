@@ -25,7 +25,7 @@ class Node(BaseModel):
     type: NodeType = Field(...)
     value: float = Field(0)
     expected_value: Optional[float] = Field(None)
-    cum_value: float = Field(0)
+    cum_value: Optional[float] = Field(None)
     children: Optional[List[Node]] = Field(None)
     utility_function: UtilityFunction = Field(UtilityFunction())
     expected_value_func: Optional[Callable[...,Tuple]] = Field(None)
@@ -45,7 +45,12 @@ class Node(BaseModel):
         extra = 'forbid'
         validate_assignment = True
         
-    def solve(self):
+    def solve(self, init=True):
+        
+        if init:
+            self.cum_value = self.value 
+            init = False
+        
         #If the expected value is already estimated
         if self.expected_value:
             return self.expected_value
@@ -58,7 +63,7 @@ class Node(BaseModel):
         children_prob = []
         for c in self.children:
             c.cum_value = self.cum_value + c.value
-            child_value = c.solve()
+            child_value = c.solve(init=False)
             children_values.append(child_value)
             children_prob.append(c.probability)
         c_values = np.array(children_values, dtype='float')
@@ -85,7 +90,7 @@ class Node(BaseModel):
         
         prob_text = f"{new_line} :game_die: [bold cyan]Prob[/bold cyan]: [u]{self.probability}[/u] |" if self.probability < 1 else ""
         value_text = f"{new_line} :100: [bold blue]Value[/bold blue]: [u]{self.value}[/u] |"
-        cumvalue_text = f"{new_line} :heavy_plus_sign: [bold magenta]Cum Value[/bold magenta]: [u]{self.cum_value}[/u] |"
+        cumvalue_text = f"{new_line} :heavy_plus_sign: [bold magenta]Cum Value[/bold magenta]: [u]{self.cum_value}[/u] |" if self.cum_value is not None else ""
         expected_value_text = f"\n     :star: [bold green]Exp. Value[/bold green]: [u]{self.expected_value}[/u] |" if self.expected_value is not None else ""
         
         if decision is not None:

@@ -1,7 +1,6 @@
 name: Accion
 type: decision 
 value: -35
-cum_value: -35
 children:
   - name: Paga
     type: end
