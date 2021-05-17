@@ -3,6 +3,14 @@ from pydantic import BaseModel, Field, validator
 from typing import List, Union, Optional, Callable, Tuple
 from enum import Enum
 import numpy as np
+from pydantic.typing import new_type_supertype
+from rich.console import Console 
+from rich.tree import Tree
+from rich.theme import Theme 
+from rich.text import Text
+from rich.layout import Layout
+from rich.panel import Panel
+
 #Localimports
 from ..utility import UtilityFunction
 
@@ -42,15 +50,14 @@ class Node(BaseModel):
         if self.expected_value:
             return self.expected_value
         
-        if self.children is None:
-            self.expected_value = self.utility_function.get_utility(self.value + self.cum_value)
+        if self.children is None or self.type =='end':
+            self.expected_value = self.utility_function.get_utility(self.cum_value)
             return self.expected_value
                
         children_values = []
         children_prob = []
         for c in self.children:
-            print(c.name)
-            c.cum_value = self.cum_value
+            c.cum_value = self.value + self.cum_value + c.value
             child_value = c.solve()
             children_values.append(child_value)
             children_prob.append(c.probability)
@@ -63,6 +70,40 @@ class Node(BaseModel):
         if self.type == 'decision':
             self.path = self.children[result[1]].name
             
-        return result[0]
+        self.expected_value = result[0]
+        return self.expected_value
+    
+    def tree(self, decision=None):
+        if self.type == 'decision':
+            root_text = f":black_large_square: {self.name}"
+        elif self.type == 'random':
+            root_text = f":white_circle: {self.name}"
+        else:
+            root_text = f":small_red_triangle_down: {self.name}"
+        
+        prob_text = f" [bold cyan]Prob[/bold cyan]: [u]{self.probability}[/u] |" if self.probability < 1 else ""
+        value_text = f" [bold blue]Value[/bold blue]: [u]{self.value}[/u] |"
+        cumvalue_text = f"[bold magenta]Cum Value[/bold magenta]: [u]{self.cum_value}[/u] |"
+        expected_value_text = f"\n [bold green]Exp. Value[/bold green]: [u]{self.expected_value}[/u] |" if self.expected_value is not None else ""
+        
+        if decision is not None:
+            if decision ==  self.name:
+                dec_emoji = ":white_check_mark:"
+            else:
+                dec_emoji = ":no_entry_sign:"
+        else:
+            dec_emoji = ""
+        
+        tree_text = dec_emoji + root_text + prob_text + value_text + cumvalue_text + expected_value_text
+        node_tree = Tree(tree_text,highlight=True, style='dim')
+
+        if self.children is None or self.type =='end':
+            return node_tree 
+        
+        for c in self.children:
+            node_tree.add(c.tree(decision=self.path))
+                   
+        return node_tree
+
 
 Node.update_forward_refs()
