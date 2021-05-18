@@ -1,0 +1,42 @@
+name: Lanzamiento
+type: decision
+value: 0
+children:
+  - name: Sin_agencia
+    type: random
+    value: 0
+    children:
+      - name: Exito
+        type: end
+        probability: 0.6
+        value: 500
+      - name: Fracaso
+        type: end 
+        probability: 0.4
+        value: -200
+  - name: Con_Agencia
+    type: decision
+    children:
+      - name: Imagen
+        type: random
+        children:
+          - name: Exito
+            type: end 
+            value: 450
+            probability: 0.9
+          - name: Fracaso 
+            type: end
+            value: -205
+            probability: 0.1
+      - name: Ingenio
+        type: random
+        children:
+          - name: Exito
+            type: end 
+            value: 480
+            probability: 0.8
+          - name: Fracaso 
+            type: end
+            value: -220
+            probability: 0.2
+          
