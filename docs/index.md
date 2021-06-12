@@ -1,9 +1,10 @@
-# {package}
+# decisionpy
 
-+ **Documentation** [http://scuervo91.github.io/{package}](http://scuervo91.github.io/{package})
-+ **Sorce Code** [https://github.com/scuervo91/{package}](https://github.com/scuervo91/{package})
++ **Documentation** [http://scuervo91.github.io/decisionpy](http://scuervo91.github.io/decisionpy)
++ **Sorce Code** [https://github.com/scuervo91/decisionpy](https://github.com/scuervo91/decisionpy)
 
-{package description}
+Decisionpy is a Python package with Decision-Making methodologies based on the book [Toma de decisiones en las empresas
+Entre el arte y la técnica: metodologías, modelos y herramientas](https://ediciones.uniandes.edu.co/Paginas/DetalleLibro.aspx?lid=1002) by profesor [Mario Castillo](https://academia.uniandes.edu.co/AcademyCv/mcastill)
 
 
 ## Requirements
@@ -15,7 +16,7 @@
 
 
 ```console
-$ pip install {package}
+$ pip install decisionpy
 
 ---> 100%
 ```
