@@ -1,0 +1,94 @@
+name: Aut_externa
+type: decision
+value: 0
+children:
+  - name: no_consulta
+    type: decision 
+    value: 0
+    children:
+      - name: Agresiva
+        type: random
+        value: 0
+        children:
+          - name: FD
+            type: end 
+            probability: 0.4
+            value: 15
+          - name: PD
+            type: end 
+            probability: 0.6
+            value: -4
+      - name: Cauteloso
+        type: random
+        value: 0
+        children:
+          - name: FD
+            type: end 
+            probability: 0.4
+            value: 7
+          - name: PD
+            type: end 
+            probability: 0.6
+            value: 4
+  - name: consulta 
+    type: random 
+    value: 0
+    children:
+      - name: Excelente
+        type: decision
+        probability: 0.42
+        value: 0
+        children:
+          - name: Agresiva
+            type: random
+            value: 0
+            children:
+              - name: FD
+                type: end 
+                probability: 0.571
+                value: 15
+              - name: PD
+                type: end 
+                probability: 0.429
+                value: -4
+          - name: Cauteloso
+            type: random
+            value: 0
+            children:
+              - name: FD
+                type: end 
+                probability: 0.571
+                value: 7
+              - name: PD
+                type: end 
+                probability: 0.429
+                value: 4
+      - name: muy_bueno
+        type: decision
+        probability: 0.58
+        value: 0
+        children:
+          - name: Agresiva
+            type: random
+            value: 0
+            children:
+              - name: FD
+                type: end 
+                probability: 0.276
+                value: 15
+              - name: PD
+                type: end 
+                probability: 0.724
+                value: -4
+          - name: Cauteloso
+            type: random
+            value: 0
+            children:
+              - name: FD
+                type: end 
+                probability: 0.276
+                value: 7
+              - name: PD
+                type: end 
+                probability: 0.724
+                value: 4
